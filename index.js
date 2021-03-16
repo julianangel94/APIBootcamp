@@ -1,36 +1,20 @@
 //const http = require('http'); //cargar con comand js
 //import http from 'http' cargar con ecma script moduls
 
+require('./mongo')
+
 const express = require('express')
 const cors = require('cors')
 const logger = require('./loggerMiddleware')
 
 const app = express()
+const Note = require('./models/Note')
 
 app.use(cors())
 app.use(express.json())
 app.use(logger)
 
-let notes = [
-    {
-        'id': 1,
-        'content': 'This is the note one',
-        'date': '2019-05-30Tl7:30:31.098Z',
-        'important': true
-    },
-    {
-        'id': 2,
-        'content': 'This is the note two',
-        'date': '2019-05-30Tl7:30:31.098Z',
-        'important': false
-    },
-    {
-        'id': 3,
-        'content': 'This is the note three',
-        'date': '2019-05-30Tl7:30:31.098Z',
-        'important': true
-    }
-]
+let notes = []
 
 // const app = http.createServer((request, response) => {
 //     response.writeHead(200, {'Content-Type':'application/json'})
@@ -42,7 +26,9 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/notes', (request, response) => {
-    response.json(notes)
+    notes.find({}).then(notes => {
+        response.json(notes)
+    })
 })
 
 app.get('/api/notes/:id', (request, response) => {
